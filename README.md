@@ -53,6 +53,7 @@ The architecture of the proposed video inpainting network is shown below. It con
 ## Results
 
 **Performance on DAVIS Dataset:**
+
 **Quantitative Results:**
 
 

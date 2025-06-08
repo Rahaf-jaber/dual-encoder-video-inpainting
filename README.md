@@ -67,7 +67,7 @@ The model offers a superior trade-off between **visual fidelity and computationa
 
 **Visual Results:**
 <p align="center">
-  <img src="./qualitative.jpg" alt="Qualitative Comparison" width="800"/>
+  <img src="./qualitative.png" alt="Qualitative Comparison" width="800"/>
 </p>
 
 Above: Visual comparison on DAVIS. From left to right — masked frame, FuseFormer, FGT, E2FGVI, ProPainter, Ours (ResNet-50), and Ours (Swin). Our dual-encoder models yield sharper textures, intact edges, and reduced artifacts.

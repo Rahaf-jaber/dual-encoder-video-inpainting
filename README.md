@@ -18,3 +18,16 @@ The architecture comprises:
 - **Mask-Guided Sparse Video Transformer (MSVT)**
 
 ![Architecture](./methodology.jpg) 
+
+## 🏆 Results
+
+**Performance on DAVIS Dataset:**
+
+| Model               | PSNR ↑ | SSIM ↑  | VFID ↓ | Runtime ↓ |
+|--------------------|--------|---------|--------|-----------|
+| ProPainter         | 33.02  | 0.9627  | 0.115  | 0.057 s   |
+| E2FGVI             | 33.01  | 0.9721  | 0.116  | 0.085 s   |
+| Ours (ResNet-50)   | **33.77** | 0.9660  | **0.115**  | **0.049 s** |
+| Ours (Efficient)   | 32.96  | 0.9622  | 0.117  | **0.042 s** |
+
+---

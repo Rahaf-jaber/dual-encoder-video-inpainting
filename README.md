@@ -17,4 +17,4 @@ The architecture comprises:
 - **Dual-Encoder Feature Extraction** (CNN + ResNet-50)  
 - **Mask-Guided Sparse Video Transformer (MSVT)**
 
-![Architecture](./assets/methodology.png) 
+![Architecture](./methodology.jpg) 

@@ -23,7 +23,7 @@ We introduce a **dual-encoder video inpainting model** that integrates both ligh
 ## Introduction  
 Transformer-based video inpainting models like ProPainter achieve strong results but struggle to balance **efficiency and feature richness**. This paper introduces a **single-stage dual-encoder transformer-based video inpainting model**. We incorporate a **lightweight CNN encoder** to extract low-level textures and a **ResNet-50 encoder** for high-level semantic context. These features are fused and refined using a **mask-guided sparse transformer**.
 
-The proposed model outperforms state-of-the-art approaches such as **ProPainter** and **E2FGVI** in both **visual quality** and **runtime performance**, evaluated on standard benchmarks like **DAVIS** and **YouTube-VOS**.
+The proposed model outperforms state-of-the-art approaches such as **ProPainter** and **E2FGVI** in both **visual quality** and **runtime performance**, evaluated on standard benchmarks like **DAVIS**.
 
 ---
 

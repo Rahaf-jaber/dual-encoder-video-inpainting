@@ -40,13 +40,9 @@ The architecture of the proposed video inpainting network is shown below. It con
 </p>
 
 ---
-## Train  
+## Dependencies and Installation
 *Will be added soon.*
 
----
-
-## Test  
-*Will be added soon.*
 
 ---
 

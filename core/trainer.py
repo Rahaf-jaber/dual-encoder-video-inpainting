@@ -85,6 +85,18 @@ class Trainer:
         self.netG = net.InpaintGenerator()
         # print(self.netG)
         self.netG = self.netG.to(self.config['device'])
+        for name, param in self.netG.named_parameters():
+            # Freeze everything first
+            param.requires_grad = False
+
+        # Unfreeze specific layers (layer6 and layer7 in ResNet)
+        for name, param in self.netG.encoder2.backbone.named_parameters():
+            if "layer3" in name or "layer4" in name:
+                param.requires_grad = True
+
+        for param in self.netG.encoder.parameters():
+            param.requires_grad = False
+
         if not self.config['model'].get('no_dis', False):
             if self.config['model'].get('dis_2d', False):
                 self.netD = net.Discriminator_2D(

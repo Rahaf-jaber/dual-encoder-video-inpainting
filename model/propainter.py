@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
+import torchvision.models as models
 
 from einops import rearrange
 
@@ -190,6 +191,26 @@ class BidirectionalPropagation(nn.Module):
                outputs.view(b, -1, c, h, w), masks_f
 
 
+class deconv(nn.Module):
+    def __init__(self,
+                 input_channel,
+                 output_channel,
+                 kernel_size=3,
+                 padding=0):
+        super().__init__()
+        self.conv = nn.Conv2d(input_channel,
+                              output_channel,
+                              kernel_size=kernel_size,
+                              stride=1,
+                              padding=padding)
+
+    def forward(self, x):
+        x = F.interpolate(x,
+                          scale_factor=2,
+                          mode='bilinear',
+                          align_corners=True)
+        return self.conv(x)
+
 class Encoder(nn.Module):
     def __init__(self):
         super(Encoder, self).__init__()
@@ -232,26 +253,28 @@ class Encoder(nn.Module):
         return out
 
 
-class deconv(nn.Module):
-    def __init__(self,
-                 input_channel,
-                 output_channel,
-                 kernel_size=3,
-                 padding=0):
-        super().__init__()
-        self.conv = nn.Conv2d(input_channel,
-                              output_channel,
-                              kernel_size=kernel_size,
-                              stride=1,
-                              padding=padding)
+class ResNet50_Encoder(nn.Module):
+    def __init__(self, pretrained=True, out_dim=128):
+        super(ResNet50_Encoder, self).__init__()
+        
+        # Pretrained ResNet50 backbone
+        resnet = models.resnet50(pretrained=pretrained)
+        self.backbone = nn.Sequential(*list(resnet.children())[:-2])  # until layer4
+        
+        # 5 → 3 channel projection (for masked frames + masks)
+        self.input_proj = nn.Conv2d(5, 3, kernel_size=1)
+        
+        # Reduce ResNet feature depth (2048 → out_dim)
+        self.reduce_conv = nn.Conv2d(2048, out_dim, kernel_size=1, stride=1, padding=0)
 
     def forward(self, x):
-        x = F.interpolate(x,
-                          scale_factor=2,
-                          mode='bilinear',
-                          align_corners=True)
-        return self.conv(x)
-
+        # Project 5 channels (3 RGB + 2 masks) → 3 channels
+        x = self.input_proj(x)
+        
+        # Standard ResNet forward
+        x = self.backbone(x)          # [B, 2048, H/32, W/32]
+        x = self.reduce_conv(x)       # [B, out_dim, H/32, W/32]
+        return x
 
 class InpaintGenerator(BaseNetwork):
     def __init__(self, init_weights=True, model_path=None):
@@ -261,7 +284,7 @@ class InpaintGenerator(BaseNetwork):
 
         # encoder
         self.encoder = Encoder()
-
+        self.encoder2 = ResNet50_Encoder()
         # decoder
         self.decoder = nn.Sequential(
             deconv(channel, 128, kernel_size=3, padding=1),
@@ -327,9 +350,17 @@ class InpaintGenerator(BaseNetwork):
         b, t, _, ori_h, ori_w = masked_frames.size()
 
         # extracting features
-        enc_feat = self.encoder(torch.cat([masked_frames.view(b * t, 3, ori_h, ori_w),
+        enc_feat1 = self.encoder(torch.cat([masked_frames.view(b * t, 3, ori_h, ori_w),
                                         masks_in.view(b * t, 1, ori_h, ori_w),
                                         masks_updated.view(b * t, 1, ori_h, ori_w)], dim=1))
+        enc_feat2 = self.encoder2(torch.cat([masked_frames.view(b * t, 3, ori_h, ori_w),
+                                        masks_in.view(b * t, 1, ori_h, ori_w),
+                                        masks_updated.view(b * t, 1, ori_h, ori_w)], dim=1))
+        if enc_feat1.size()[2:] != enc_feat2.size()[2:]:
+            enc_feat2 = F.interpolate(enc_feat2, size=enc_feat1.shape[2:], mode='bilinear', align_corners=False)
+        
+        enc_feat = 0.8 * enc_feat1 + 0.2 * enc_feat2
+
         _, c, h, w = enc_feat.size()
         local_feat = enc_feat.view(b, t, c, h, w)[:, :l_t, ...]
         ref_feat = enc_feat.view(b, t, c, h, w)[:, l_t:, ...]

@@ -53,8 +53,8 @@ The architecture of the proposed video inpainting network is shown below. It con
 | Ours (ResNet-50)   | **33.77** | 0.9660  | **0.115**  | **0.049 s** |
 | Ours (Efficient)   | 32.96  | 0.9622  | 0.117  | **0.042 s** |
 
-The model offers a superior trade-off between **visual fidelity and computational speed**, achieving real-time performance on consumer-grade GPUs.
-
+The model with ResNet-50 offers a superior trade-off between **visual fidelity and computational speed**, achieving real-time performance on consumer-grade GPUs.
+Note: You can access the pretrained model “Ours (ResNet-50)” via this link: https://drive.google.com/drive/folders/1VTZLet9EjtxLjRVL7IKw-4xfvWQM9zIr?usp=sharing
 **Visual Results:**
 <p align="center">
   <img src="./qualitative.png" alt="Qualitative Comparison" width="800"/>

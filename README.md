@@ -11,9 +11,7 @@ We introduce a **dual-encoder video inpainting model** that integrates both ligh
 
 ## Contents
 - [Introduction](#introduction)  
-- [Methodology](#network)  
-- [Train](#train)  
-- [Test](#test)  
+- [Methodology](#network)   
 - [Results](#results)  
 - [Citation](#citation)  
 - [Acknowledgements](#acknowledgements)  
@@ -38,11 +36,6 @@ The architecture of the proposed video inpainting network is shown below. It con
 <p align="center">
   <img src="./methodology.jpg" alt="Dual Encoder Architecture" width="800"/>
 </p>
-
----
-## Dependencies and Installation
-*Will be added soon.*
-
 
 ---
 

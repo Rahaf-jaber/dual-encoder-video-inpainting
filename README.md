@@ -13,7 +13,6 @@ We introduce a **dual-encoder video inpainting model** that integrates both ligh
 - [Introduction](#introduction)  
 - [Methodology](#network)   
 - [Results](#results)  
-- [Citation](#citation)  
 - [Acknowledgements](#acknowledgements)  
 
 ---
